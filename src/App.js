@@ -3,6 +3,7 @@ import './App.css';
 
 import BookItem from './BookItem';
 import AddBook from './AddBook';
+import {fetchBooks, requestApiKey} from './api.js';
 
 const books = [
   {
@@ -14,6 +15,7 @@ const books = [
     author: 'some other author'
   }
 ];
+
 
 localStorage.setItem('books', JSON.stringify(books));
 
@@ -31,6 +33,11 @@ class App extends Component {
   componentWillMount() {
     this.getBooks();
     this.setState({ books });
+  }
+
+  componentDidMount() {
+    const key = fetchBooks();
+    console.log(key);
   }
 
   getBooks() {
@@ -71,7 +78,6 @@ class App extends Component {
     return (
       <div className="App">
         <h1>Book Manager</h1>
-
         <AddBook
           onAdd={this.onAdd}
         />
