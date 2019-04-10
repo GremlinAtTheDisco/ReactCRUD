@@ -36,7 +36,10 @@ class App extends Component {
     super(props)
 
     this.state = {
-      books: JSON.parse(localStorage.getItem('books'), 'title')
+      books: JSON.parse(localStorage.getItem('books'),
+        'title',
+        'author'),
+      limit: 10
     };
     this.onDelete = this.onDelete.bind(this);
     this.onAdd = this.onAdd.bind(this);
@@ -60,17 +63,14 @@ class App extends Component {
   onAdd(title, author) {
     const books = this.getBooks();
 
-    /*books.push({
-      title,
-      author
-    });*/
-
     fetch(`https://www.forverkliga.se/JavaScript/api/crud.php?op=insert&key=${apiKey}&title=${title}&author=${author}`)
       .then(response => response.json())
       .then(data => {
-        if (data.status) {
+        if (data.status && this.state.limit >= 10) {
           this.onAdd(title, author);
           this.setState({ books });
+          books.push({ title, author });
+          this.setState({ limit: this.state.limit - 1 });
         } else {
           console.log('something went poopy');
         }
